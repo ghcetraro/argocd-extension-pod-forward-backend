@@ -1,0 +1,149 @@
+name: Build and Release Extension
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'poc-argocd-forward-tab/**'
+      - '.github/workflows/extension-build.yml'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'poc-argocd-forward-tab/**'
+      - '.github/workflows/extension-build.yml'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (e.g., v0.1.0)'
+        required: true
+        type: string
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  build-extension:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install git (required for argo-ui dependency)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git
+
+      - name: Configure npm
+        run: |
+          npm config set fetch-retries 5
+          npm config set fetch-retry-mintimeout 20000
+          npm config set fetch-retry-maxtimeout 120000
+          npm config set git-tag-version false
+
+      - name: Install dependencies
+        working-directory: ./poc-argocd-forward-tab
+        run: npm install --legacy-peer-deps
+
+      - name: Build extension
+        working-directory: ./poc-argocd-forward-tab
+        run: npm run build
+
+      - name: Verify extension.tar exists
+        working-directory: ./poc-argocd-forward-tab
+        run: |
+          if [ ! -f extension.tar ]; then
+            echo "❌ Error: extension.tar no se generó"
+            exit 1
+          fi
+          echo "✅ extension.tar generado correctamente"
+          ls -lh extension.tar
+
+      - name: Upload extension as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: extension-tar
+          path: poc-argocd-forward-tab/extension.tar
+          retention-days: 30
+
+      - name: Create checksums
+        working-directory: ./poc-argocd-forward-tab
+        run: |
+          sha256sum extension.tar > extension_checksums.txt
+          echo "Checksums generados:"
+          cat extension_checksums.txt
+
+      - name: Upload checksums as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: extension-checksums
+          path: poc-argocd-forward-tab/extension_checksums.txt
+          retention-days: 30
+
+      - name: Get version from package.json
+        id: get_version
+        working-directory: ./poc-argocd-forward-tab
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+
+      - name: Determine release tag
+        id: release_tag
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            TAG="${{ github.event.inputs.version }}"
+          else
+            VERSION="${{ steps.get_version.outputs.version }}"
+            TAG="v${VERSION}"
+          fi
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+          echo "Release tag: ${TAG}"
+
+      - name: Create GitHub Release
+        if: github.event_name != 'pull_request'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.release_tag.outputs.tag }}
+          name: Release ${{ steps.release_tag.outputs.tag }}
+          body: |
+            ## Extensión ArgoCD Forward Tab ${{ steps.release_tag.outputs.tag }}
+            
+            Esta release contiene la extensión de ArgoCD que agrega una solapa "FORWARD" para realizar port-forward a pods.
+            
+            ### Archivos incluidos:
+            - `extension.tar` - Archivo de la extensión listo para usar
+            - `extension_checksums.txt` - Checksums SHA256 para verificación
+            
+            ### Instalación:
+            
+            Agrega la siguiente configuración en `values.yaml` de ArgoCD:
+            
+            ```yaml
+            argo-cd:
+              server:
+                extensions:
+                  enabled: true
+                  extensionList:
+                    - name: extension-forward-tab
+                      env:
+                        - name: EXTENSION_URL
+                          value: https://github.com/${{ github.repository }}/releases/download/${{ steps.release_tag.outputs.tag }}/extension.tar
+                        - name: EXTENSION_CHECKSUM_URL
+                          value: https://github.com/${{ github.repository }}/releases/download/${{ steps.release_tag.outputs.tag }}/extension_checksums.txt
+            ```
+          files: |
+            poc-argocd-forward-tab/extension.tar
+            poc-argocd-forward-tab/extension_checksums.txt
+          draft: false
+          prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,7 @@
+{
+  "name": "forward-tab",
+  "version": "0.1.0",
+  "description": "Extensión de ArgoCD que agrega una solapa FORWARD para port-forward a pods",
+  "main": "resources/extension.js",
+  "type": "resource-extension"
+}

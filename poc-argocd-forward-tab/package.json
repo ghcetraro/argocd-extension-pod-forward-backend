@@ -1,0 +1,25 @@
+{
+  "name": "@argocd/forward-tab-extension",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {},
+  "peerDependencies": {
+    "argo-ui": "git+https://github.com/argoproj/argo-ui.git",
+    "react": "^16.9.3",
+    "react-dom": "^16.9.3"
+  },
+  "scripts": {
+    "build": "webpack --config ./webpack.config.js && cp manifest.json dist/ && cd dist && tar -cvf ../extension.tar extension-forward-tab.js manifest.json && cd .. && ls -lh extension.tar"
+  },
+  "devDependencies": {
+    "@types/react": "^16.8.5",
+    "@types/react-dom": "^16.8.5",
+    "argo-ui": "git+https://github.com/argoproj/argo-ui.git",
+    "esbuild-loader": "^3.0.1",
+    "react": "^16.9.3",
+    "react-dom": "^16.9.3",
+    "typescript": "^4.3.5",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^4.7.2"
+  }
+}
