@@ -18,7 +18,7 @@ npm install --legacy-peer-deps
 npm run build
 ```
 
-Esto generará `extension.tar` que contiene los recursos de la extensión.
+Esto generará `extension.tar.gz` que contiene los recursos de la extensión.
 
 ### Construir con Docker
 

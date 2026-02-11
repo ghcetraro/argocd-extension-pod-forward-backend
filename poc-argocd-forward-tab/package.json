@@ -9,7 +9,7 @@
     "react-dom": "^16.9.3"
   },
   "scripts": {
-    "build": "webpack --config ./webpack.config.js && cp manifest.json dist/ && cd dist && tar -cvf ../extension.tar extension-forward-tab.js manifest.json && cd .. && ls -lh extension.tar"
+    "build": "webpack --config ./webpack.config.js && cp manifest.json dist/ && cd dist && tar -czf ../extension.tar.gz extension-forward-tab.js manifest.json && cd .. && ls -lh extension.tar.gz"
   },
   "devDependencies": {
     "@types/react": "^16.8.5",

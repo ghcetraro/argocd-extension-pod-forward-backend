@@ -34,5 +34,5 @@ COPY src/ ./src/
 # Copiar manifest.json (debe existir en el contexto de build)
 COPY manifest.json ./manifest.json
 
-# Comando por defecto - ejecuta el build y crea el tar
-CMD ["sh", "-c", "npm run build && if [ -f extension.tar ]; then echo '✅ Build exitoso: extension.tar creado'; ls -lh extension.tar; else echo '❌ Error: extension.tar no se generó'; exit 1; fi"]
+# Comando por defecto - ejecuta el build y crea el tar.gz
+CMD ["sh", "-c", "npm run build && if [ -f extension.tar.gz ]; then echo '✅ Build exitoso: extension.tar.gz creado'; ls -lh extension.tar.gz; else echo '❌ Error: extension.tar.gz no se generó'; exit 1; fi"]
