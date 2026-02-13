@@ -78,15 +78,15 @@ jobs:
       - name: Create checksums
         working-directory: ./poc-argocd-forward-tab
         run: |
-          sha256sum poc-argocd-forward-tab.tar.gz > extension_checksums.txt
+          sha256sum poc-argocd-forward-tab.tar.gz > poc-argocd-forward-tab_checksums.txt
           echo "Checksums generados:"
-          cat extension_checksums.txt
+          cat poc-argocd-forward-tab_checksums.txt
 
       - name: Upload checksums as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: extension-checksums
-          path: poc-argocd-forward-tab/extension_checksums.txt
+          name: poc-argocd-forward-tab-checksums
+          path: poc-argocd-forward-tab/poc-argocd-forward-tab_checksums.txt
           retention-days: 30
 
       - name: Get version from package.json
@@ -122,7 +122,7 @@ jobs:
             
             ### Archivos incluidos:
             - `poc-argocd-forward-tab.tar.gz` - Archivo de la extensión listo para usar
-            - `extension_checksums.txt` - Checksums SHA256 para verificación
+            - `poc-argocd-forward-tab_checksums.txt` - Checksums SHA256 para verificación
             
             ### Instalación:
             
@@ -139,11 +139,11 @@ jobs:
                         - name: EXTENSION_URL
                           value: https://github.com/${{ github.repository }}/releases/download/${{ steps.release_tag.outputs.tag }}/poc-argocd-forward-tab.tar.gz
                         - name: EXTENSION_CHECKSUM_URL
-                          value: https://github.com/${{ github.repository }}/releases/download/${{ steps.release_tag.outputs.tag }}/extension_checksums.txt
+                          value: https://github.com/${{ github.repository }}/releases/download/${{ steps.release_tag.outputs.tag }}/poc-argocd-forward-tab_checksums.txt
             ```
           files: |
             poc-argocd-forward-tab/poc-argocd-forward-tab.tar.gz
-            poc-argocd-forward-tab/extension_checksums.txt
+            poc-argocd-forward-tab/poc-argocd-forward-tab_checksums.txt
           draft: false
           prerelease: false
           token: ${{ secrets.GITHUB_TOKEN }}

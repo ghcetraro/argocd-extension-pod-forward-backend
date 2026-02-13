@@ -42,7 +42,7 @@ argo-cd:
             - name: EXTENSION_URL
               value: https://github.com/tu-usuario/poc-argocd-forward-tab/releases/download/v0.1.0/poc-argocd-forward-tab.tar.gz
             - name: EXTENSION_CHECKSUM_URL
-              value: https://github.com/tu-usuario/poc-argocd-forward-tab/releases/download/v0.1.0/extension_checksums.txt
+              value: https://github.com/tu-usuario/poc-argocd-forward-tab/releases/download/v0.1.0/poc-argocd-forward-tab_checksums.txt
 ```
 
 ## Requisitos

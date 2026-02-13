@@ -9,7 +9,7 @@
     "react-dom": "^16.9.3"
   },
   "scripts": {
-    "build": "webpack --config ./webpack.config.js && cp manifest.json dist/ && cd dist && tar -czf ../poc-argocd-forward-tab.tar.gz extension-forward-tab.js manifest.json && cd .. && ls -lh poc-argocd-forward-tab.tar.gz"
+    "build": "webpack --config ./webpack.config.js && mkdir -p dist/resources/forward-tab && mv dist/extension-forward-tab.js dist/resources/forward-tab/ && cp manifest.json dist/ && cd dist && tar -czf ../poc-argocd-forward-tab.tar.gz resources/ manifest.json && cd .. && ls -lh poc-argocd-forward-tab.tar.gz"
   },
   "devDependencies": {
     "@types/react": "^16.8.5",
