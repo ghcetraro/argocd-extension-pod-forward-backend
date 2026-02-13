@@ -14,11 +14,6 @@ on:
       - 'poc-argocd-forward-tab/**'
       - '.github/workflows/extension-build.yml'
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version tag (e.g., v0.1.0)'
-        required: true
-        type: string
 
 env:
   NODE_VERSION: '18'
@@ -89,23 +84,10 @@ jobs:
           path: poc-argocd-forward-tab/poc-argocd-forward-tab_checksums.txt
           retention-days: 30
 
-      - name: Get version from package.json
-        id: get_version
-        working-directory: ./poc-argocd-forward-tab
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "Version: $VERSION"
-
-      - name: Determine release tag
+      - name: Generate release tag
         id: release_tag
         run: |
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            TAG="${{ github.event.inputs.version }}"
-          else
-            VERSION="${{ steps.get_version.outputs.version }}"
-            TAG="v${VERSION}"
-          fi
+          TAG=$(date -u +"%Y-%m-%d-%H-%M")
           echo "tag=${TAG}" >> $GITHUB_OUTPUT
           echo "Release tag: ${TAG}"
 

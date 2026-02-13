@@ -40,17 +40,20 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Generate release tag
+        id: release_tag
+        run: |
+          TAG=$(date -u +"%Y-%m-%d-%H-%M")
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+          echo "Release tag: ${TAG}"
+
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=sha,prefix={{branch}}-
+            type=raw,value=${{ steps.release_tag.outputs.tag }}
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push Docker image
@@ -63,3 +66,29 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Create GitHub Release
+        if: github.event_name != 'pull_request'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.release_tag.outputs.tag }}
+          name: Docker Image Release ${{ steps.release_tag.outputs.tag }}
+          body: |
+            ## Docker Image Release ${{ steps.release_tag.outputs.tag }}
+            
+            Esta release contiene la imagen Docker del backend de port-forward.
+            
+            ### Imagen Docker:
+            
+            ```bash
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.release_tag.outputs.tag }}
+            ```
+            
+            O usar la versión latest:
+            
+            ```bash
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+            ```
+          draft: false
+          prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
