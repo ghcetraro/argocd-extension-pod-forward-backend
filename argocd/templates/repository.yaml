@@ -1,0 +1,57 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-private-http-repo
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repository
+stringData:
+  url: http://10.1.1.20:3000/ghcetraro/argocd.git
+  password: argocd
+  username: argocd
+  #insecure: "true" # Ignore validity of server's TLS certificate. Defaults to "false"
+  forceHttpBasicAuth: "true" # Skip auth method negotiation and force usage of HTTP basic auth. Defaults to "false"
+  enableLfs: "true" # Enable git-lfs for this repository. Defaults to "false"
+#
+#
+#---
+#apiVersion: v1
+#kind: Secret
+#metadata:
+#  name: my-private-ssh-repo
+#  namespace: argocd
+#  labels:
+#    argocd.argoproj.io/secret-type: repository
+#stringData:
+#  url: ssh://git@10.1.1.20:222/ghcetraro/argocd.git
+#  sshPrivateKey: |
+#    -----BEGIN RSA PRIVATE KEY-----
+#    MIIEpQIBAAKCAQEA4xJh2XkWmYF9ZDuBFsdCI2WfqiyAULNWh0whxeEoeWbhyr80
+#    1K5r9uiuBh9zHB4MeHzg9HJpXIT3EqplR7+iOOfG++d4/mfssbnvhKE4x2h+uBbt
+#    dLexUWQ9NuFFFB9YvXFveUdc9AG+/THJ/kyqjDdzW4ckAraxsgDHQhNUbiFUMKzn
+#    XlCPpt3fQlYS6foky8DWH3G/h9NjqtbQ8xqyrkwhwsULACxv4w8qT0tmuUMmkRl+
+#    FQX8oqJ9dJFn5+ZCyVqX48Gtw1nkdgpzEDa2wc7ckNLsDqMQUEsxiZCErSl1GY1T
+#    JmeiKhAaP4KgWwrck8OggT1hcLoaUkMy88KG6wIDAQABAoIBAQCHo7dnnPlvAPbS
+#    JOlbnfNYCaBymtqbWkVZ1JRoC7ONsXM3FTiNwxMjDqLFbYvpQ9nXL2GBI8bkSVj9
+#    gWO2lDZnH6yxVPfloFa3Y4Y8B8JO+5CWjruReRkmsWYPnkkRWBg+McCRBZv09gYM
+#    YO10Rn+p+oWiKvvL0y4aUnS0d697iLTLMy0oMx3VvFSU5kH5cd4Zv6pyRROHombo
+#    GGBTnvpMsWNB87Wp+QHlde4Qbx+qNiOJgWxbR41iDkFafRrCVXa/G2hDGf5UINYU
+#    2jvBEupar0N5Iu7wge/YYEzizfJyPSg6c6iFtxYjtNVQbqNJzQsF+BbvTlkyjkni
+#    ZDJj9jChAoGBAP0ZAXd31AnWn8+5ImFGVNhvCwTeES1mn4IwK3CIQCpuQA04pyiK
+#    IhOlxTKEMHxFDARTCt+/agMXeLtIqzdI7HQkcMI3PMZ+HzlHW7z1/gpzfyvd+zd6
+#    LfEi9MMp++yxO72EEQSazNSCLDbC+lewEX3/W04/dC/qei5yy9CC7gBPAoGBAOWs
+#    +ZDw3nfJovxoMv657sAi3X8b+cLvLXSmLGg2VariaBn1V3WBbXHG2bsRMtKkaUP8
+#    yerq/kuP2P00C0x7Zo/COLPcyl4P89jKFHwd1vrYaRMgFdP/kLcb3RslrRhB7X3i
+#    Qe5HLh8Qk+tnXx1FMcj3oJsHtWpU8mOC4fGSVWylAoGBAL2ZqO6dVrvUCz4qW2Xx
+#    sQe+D8wiq02OjjmR6kjP2PmwQ81jvl1xNVvwmAxi2IuPkhP/PasmEr2kLK5oHtM4
+#    juHmlo33oVC1FKDtIv0obpnXsdHj5hjGL3pwDFnTrsS+dJlhQPppGL6tkX+oiq97
+#    127DB9xTTq/CgKshFivqmW6jAoGBAK1jvLTTYuAD9WugLn9nVvruV1FSiWfEsQhT
+#    O0shWeM8MWMHeRNYtosil9VF0px7SoztFnKnHXtmCWZ+F9mRf4ggFDaVBKGmYWzU
+#    gkqBLH8LSagKnPADC/lwq6eG9fpOK0DRwvxj+EmzdjhNPd0XE9KoPzNKyoaPwr2l
+#    XXXGB3+RAoGAebzpGuI25h9Lm/4f/7YNH5xSl/5jKJpkR6vhvpB4VnKU0B0E/bhm
+#    1nZ9KABCk7CSum73Pss+CUaIG5ZAfVKJqEls1NK9LNFEURF4Zms83TCKPZxorQ8u
+#    nfPGM9w3RkkcKC3dp/ig7uBOA6fFOhzdYV0pEvw+c6sbs4B7f8qRJug=
+#    -----END RSA PRIVATE KEY-----
+#  insecure: "true" # Do not perform a host key check for the server. Defaults to "false"
+#  enableLfs: "true" # Enable git-lfs for this repository. Defaults to "false"

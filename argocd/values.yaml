@@ -1,0 +1,57 @@
+argo-cd:
+  #
+  configs:
+    params:
+      server.insecure: false
+      server.enable.proxy.extension: true
+      server.x.frame.options: sameorigin
+    #
+    secret:
+      ## `htpasswd -nbBC 10 "" admin | tr -d ':\n' | sed 's/$2y/$2a/'`
+      argocdServerAdminPassword: "$2a$10$OKj/kEXL57pV/ubCnIciw.Nz42cQ6IlHwRdfM7GE1bU2sSJettmbW"
+    #
+    cm:
+      url: https://10.1.1.30:9090  # URL base de ArgoCD (usada para redirecciones después de logout)
+      exec.enabled: true  # enable terminal
+      exec.shells: bash,sh
+      timeout.reconciliation: 180s  # -- Timeout to discover if a new manifests version got published to the repository
+      timeout.hard.reconciliation: 0s  # -- Timeout to refresh application data as well as target manifests cache
+      ui.bannercontent: "Prod ArgoCD Server"
+      ui.bannerpermanent: "true"
+      #
+      # this part configures the UI extension to use the Argo CD Metrics Server
+      # make sure to adjust the URL to your installation
+      # When using proxy extension, ArgoCD automatically handles authentication
+      extension.proxy.pod-forward: "http://pod-forward-backend.argocd.svc.cluster.local:8080"
+    #
+    rbac:
+      policy.csv: |
+        p, role:readonly, extensions, invoke, metrics, allow
+        p, admin, extensions, invoke, metrics, allow
+        p, *, extensions, invoke, metrics, allow
+        p, role:readonly, extensions, invoke, pod-forward, allow
+        p, admin, extensions, invoke, pod-forward, allow
+        p, *, extensions, invoke, pod-forward, allow
+  #
+  metricsServer:
+    enabled: false
+    service:
+      port: 9003
+  #
+  server:
+    ingress:
+      enabled: false
+    #
+    # Configuración de extensiones de ArgoCD
+    # IMPORTANTE: Debe estar dentro de 'server', no al mismo nivel
+    extensions:
+      enabled: true
+      # Configuración de extensiones usando extension-installer
+      # El extension-installer descarga e instala automáticamente desde GitHub Releases
+      extensionList:
+        - name: extension-forward-tab
+          env:
+            - name: EXTENSION_URL
+              value: https://github.com/ghcetraro/argocd-extension-pod-forward-backend/releases/download/v0.1.0/poc-argocd-forward-tab.tar.gz
+            - name: EXTENSION_CHECKSUM_URL
+              value: https://github.com/ghcetraro/argocd-extension-pod-forward-backend/releases/download/v0.1.0/poc-argocd-forward-tab_checksums.txt
