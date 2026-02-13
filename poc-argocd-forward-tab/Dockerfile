@@ -35,4 +35,4 @@ COPY src/ ./src/
 COPY manifest.json ./manifest.json
 
 # Comando por defecto - ejecuta el build y crea el tar.gz
-CMD ["sh", "-c", "npm run build && if [ -f extension.tar.gz ]; then echo '✅ Build exitoso: extension.tar.gz creado'; ls -lh extension.tar.gz; else echo '❌ Error: extension.tar.gz no se generó'; exit 1; fi"]
+CMD ["sh", "-c", "npm run build && if [ -f poc-argocd-forward-tab.tar.gz ]; then echo '✅ Build exitoso: poc-argocd-forward-tab.tar.gz creado'; ls -lh poc-argocd-forward-tab.tar.gz; else echo '❌ Error: poc-argocd-forward-tab.tar.gz no se generó'; exit 1; fi"]

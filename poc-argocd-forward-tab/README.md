@@ -18,7 +18,7 @@ npm install --legacy-peer-deps
 npm run build
 ```
 
-Esto generará `extension.tar.gz` que contiene los recursos de la extensión.
+Esto generará `poc-argocd-forward-tab.tar.gz` que contiene los recursos de la extensión.
 
 ### Construir con Docker
 
@@ -40,7 +40,7 @@ argo-cd:
         - name: extension-forward-tab
           env:
             - name: EXTENSION_URL
-              value: https://github.com/tu-usuario/poc-argocd-forward-tab/releases/download/v0.1.0/extension.tar.gz
+              value: https://github.com/tu-usuario/poc-argocd-forward-tab/releases/download/v0.1.0/poc-argocd-forward-tab.tar.gz
             - name: EXTENSION_CHECKSUM_URL
               value: https://github.com/tu-usuario/poc-argocd-forward-tab/releases/download/v0.1.0/extension_checksums.txt
 ```

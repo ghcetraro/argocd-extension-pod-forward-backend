@@ -58,27 +58,27 @@ jobs:
         working-directory: ./poc-argocd-forward-tab
         run: npm run build
 
-      - name: Verify extension.tar.gz exists
+      - name: Verify poc-argocd-forward-tab.tar.gz exists
         working-directory: ./poc-argocd-forward-tab
         run: |
-          if [ ! -f extension.tar.gz ]; then
-            echo "❌ Error: extension.tar.gz no se generó"
+          if [ ! -f poc-argocd-forward-tab.tar.gz ]; then
+            echo "❌ Error: poc-argocd-forward-tab.tar.gz no se generó"
             exit 1
           fi
-          echo "✅ extension.tar.gz generado correctamente"
-          ls -lh extension.tar.gz
+          echo "✅ poc-argocd-forward-tab.tar.gz generado correctamente"
+          ls -lh poc-argocd-forward-tab.tar.gz
 
       - name: Upload extension as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: extension-tar-gz
-          path: poc-argocd-forward-tab/extension.tar.gz
+          name: poc-argocd-forward-tab-tar-gz
+          path: poc-argocd-forward-tab/poc-argocd-forward-tab.tar.gz
           retention-days: 30
 
       - name: Create checksums
         working-directory: ./poc-argocd-forward-tab
         run: |
-          sha256sum extension.tar.gz > extension_checksums.txt
+          sha256sum poc-argocd-forward-tab.tar.gz > extension_checksums.txt
           echo "Checksums generados:"
           cat extension_checksums.txt
 
@@ -121,7 +121,7 @@ jobs:
             Esta release contiene la extensión de ArgoCD que agrega una solapa "FORWARD" para realizar port-forward a pods.
             
             ### Archivos incluidos:
-            - `extension.tar.gz` - Archivo de la extensión listo para usar
+            - `poc-argocd-forward-tab.tar.gz` - Archivo de la extensión listo para usar
             - `extension_checksums.txt` - Checksums SHA256 para verificación
             
             ### Instalación:
@@ -137,12 +137,12 @@ jobs:
                     - name: extension-forward-tab
                       env:
                         - name: EXTENSION_URL
-                          value: https://github.com/${{ github.repository }}/releases/download/${{ steps.release_tag.outputs.tag }}/extension.tar.gz
+                          value: https://github.com/${{ github.repository }}/releases/download/${{ steps.release_tag.outputs.tag }}/poc-argocd-forward-tab.tar.gz
                         - name: EXTENSION_CHECKSUM_URL
                           value: https://github.com/${{ github.repository }}/releases/download/${{ steps.release_tag.outputs.tag }}/extension_checksums.txt
             ```
           files: |
-            poc-argocd-forward-tab/extension.tar.gz
+            poc-argocd-forward-tab/poc-argocd-forward-tab.tar.gz
             poc-argocd-forward-tab/extension_checksums.txt
           draft: false
           prerelease: false
